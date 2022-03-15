@@ -49,14 +49,13 @@ public class Operaciones{
   * Divide los valores   
   * @param valor1 Lo recibe
   * @param valor2 Lo recibe
-  * @return Retorna la variable con un valor de nulo
-  * @throws Lanzará una excepcion aritmetica, ya que no es posible dividir entre cero 
+  * @return Retorna la divisioncomo numero entero
+  * @throws ArithmeticException Conteplamos la division entre 0 
   */
     public int dividir (int valor1, int valor2) throws ArithmeticException{
         int numero;
         numero = valor1 / valor2;
-        numero=	valor1 / 0;
-        numero = valor2 / 0;
+       
         
        
         return numero;
