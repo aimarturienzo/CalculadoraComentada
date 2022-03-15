@@ -49,18 +49,15 @@ public class Operaciones{
   * Divide los valores   
   * @param valor1 Lo recibe
   * @param valor2 Lo recibe
-  * @return Retorna la variable con la division de los valores
-  * @throws Contempla lo que sucede si alguno de los valores es dividido entre cero
+  * @return Retorna la variable con un valor de nulo
+  * @throws Lanzará una excepcion aritmetica, ya que no es posible dividir entre cero 
   */
-    public int dividir (int valor1, int valor2){
+    public int dividir (int valor1, int valor2) throws ArithmeticException{
         int numero;
         numero = valor1 / valor2;
-        try {
         numero=	valor1 / 0;
         numero = valor2 / 0;
-        }catch(Exception e) {
-        	System.out.println("El numero no se puede dividir entre 0");
-        }
+        
        
         return numero;
     }
