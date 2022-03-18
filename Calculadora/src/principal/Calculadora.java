@@ -8,10 +8,18 @@
  * 
  */
 package principal;
+import java.io.IOException;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import menu.Menu;
 import operaciones.Operaciones;
-import java.util.*;
+
 public class Calculadora{
+	 private static final Logger LOGGER = Logger.getLogger(Calculadora.class.getName());
 	
 /**
  * 
@@ -30,7 +38,21 @@ public class Calculadora{
         
         Menu menu = new Menu();
         Operaciones operaciones = new Operaciones();
+        Handler fileHandler = null;
+        Handler consoleHandler= new ConsoleHandler();
+        try {
+         fileHandler   = new FileHandler("./Operaciones.log");
+    }catch(IOException exception){
+        LOGGER.log(Level.SEVERE, "OcurriÃ³ un error en FileHandler.", exception);
+    }
+        LOGGER.addHandler(consoleHandler);
+        LOGGER.addHandler(fileHandler);
         
+        //Establecer niveles a handlers y LOGGER
+        consoleHandler.setLevel(Level.WARNING);
+        fileHandler.setLevel(Level.FINE);
+        LOGGER.setLevel(Level.FINE);
+         
         do{
             operandos = menu.pedirNumeros();
             operacion = menu.menuOpciones();
@@ -53,8 +75,10 @@ public class Calculadora{
             } else {
                 System.out.println ("Operación no válida");
             }
+            LOGGER.log(Level.FINE, "Operación: " + operacion + " operando 1 : " + operandos[0]+ " opreando 2 " + operandos[1] + " resultado ");
             }catch(ArithmeticException e) {
             	System.out.println("Error aritmetico");
+            	 LOGGER.log(Level.WARNING, "Division entre 0");
             }
         }   while (menu.repetir());
     }
