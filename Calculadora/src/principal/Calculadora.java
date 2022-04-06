@@ -8,18 +8,31 @@
  * 
  */
 package principal;
+
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import menu.Menu;
 import operaciones.Operaciones;
 
 public class Calculadora{
-	 private static final Logger LOGGER = Logger.getLogger(Calculadora.class.getName());
+	@SuppressWarnings("static-access")
+	private static final LogManager  logManager = LogManager.getLogManager();
+	private static final Logger LOGGER = Logger.getLogger(Calculadora.class.getName());
+	
+	static {
+		try {
+			logManager.readConfiguration(new FileInputStream("configLogpropierties"));
+		}catch (IOException exception) {
+			LOGGER.log(Level.SEVERE, "Error al cargar la configuracion");
+		}
+	}
 	
 /**
  * 
@@ -32,26 +45,15 @@ public class Calculadora{
  * @throws Si el usuario escribe una funcion que no existe en el programa, esta excepcion lanzara un mensaje mostrando el error correspondiente
  */
     public static void main(String[] args) {   
+    	configurarLog();
         int resultado = 0;
         String operacion = "";
         int[] operandos = new int [2];
         
+        
         Menu menu = new Menu();
         Operaciones operaciones = new Operaciones();
-        Handler fileHandler = null;
-        Handler consoleHandler= new ConsoleHandler();
-        try {
-         fileHandler   = new FileHandler("./Operaciones.log");
-    }catch(IOException exception){
-        LOGGER.log(Level.SEVERE, "Ocurrió un error en FileHandler.", exception);
-    }
-        LOGGER.addHandler(consoleHandler);
-        LOGGER.addHandler(fileHandler);
-        
-        //Establecer niveles a handlers y LOGGER
-        consoleHandler.setLevel(Level.WARNING);
-        fileHandler.setLevel(Level.FINE);
-        LOGGER.setLevel(Level.FINE);
+       
          
         do{
             operandos = menu.pedirNumeros();
@@ -81,5 +83,36 @@ public class Calculadora{
             	 LOGGER.log(Level.WARNING, "Division entre 0");
             }
         }   while (menu.repetir());
+    }
+    public static void configurarLog() {
+    	 LOGGER.setUseParentHandlers(false);
+    	
+    	 Handler fileHandler = null;
+         Handler consoleHandler= new ConsoleHandler();
+       
+         LOGGER.addHandler(consoleHandler);
+         
+         try {
+        	 
+          fileHandler   = new FileHandler("./OperacionesEntre0.html");
+          
+         }catch(Exception exception){
+        	 
+         LOGGER.log(Level.SEVERE, "Ocurrió un error en FileHandler.", exception);
+         
+    	}
+         
+         fileHandler.setFormatter(new FormatoHTML2());
+         
+         
+         LOGGER.addHandler(fileHandler);
+         
+         //Establecer niveles a handlers y LOGGER
+         consoleHandler.setLevel(Level.WARNING);
+         fileHandler.setLevel(Level.WARNING);
+         
+        
+         fileHandler.setFilter(new FiltroLogDivisionEntre0());
+         LOGGER.setLevel(Level.FINE);
     }
 }
